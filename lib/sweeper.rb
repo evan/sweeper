@@ -36,6 +36,8 @@ class Sweeper
   def initialize(options = {})
     @dir = File.expand_path(options['dir'] || Dir.pwd)
     @options = options
+    @outf = Tempfile.new("stdout")
+    @errf = Tempfile.new("stderr")    
   end
   
   # Run the Sweeper according to the <tt>options</tt>.
@@ -149,7 +151,7 @@ class Sweeper
   # Lookup the basic metadata for an mp3 file. Accepts a pathname. Returns a tag hash.
   def lookup_basic(filename)
     Dir.chdir File.dirname(binary) do
-      response = silence { `./#{File.basename(binary)} #{filename.inspect}` }
+      response = `./#{File.basename(binary)} #{filename.inspect} 2> #{@errf.path}`
       object = begin
         XSD::Mapping.xml2obj(response)
       rescue REXML::ParseException
@@ -245,22 +247,5 @@ class Sweeper
   def load(filename) 
     ID3Lib::Tag.new(filename, ID3Lib::V_ALL)
   end  
-  
-  # Silence STDERR and STDOUT for the duration of the block.
-  def silence(outf = nil, errf = nil)
-    # This method is annoying.
-    outf, errf = Tempfile.new("stdout"), Tempfile.new("stderr")
-    out, err = $stdout.clone, $stderr.clone
-    $stdout.reopen(outf)
-    $stderr.reopen(errf)
-    begin
-      yield
-    ensure
-      $stdout.reopen(out)
-      $stderr.reopen(err)
-      outf.close; outf.unlink
-      errf.close; errf.unlink
-    end
-  end    
   
 end

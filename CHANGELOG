@@ -1,5 +1,7 @@
 
-v0.2.1. Better error handling.
+v0.2.2. Avoid error with too many open files.
+
+v0.2.1. Better error handling; smarter genre choosing.
 
 v0.2. Genre tagging; bugfixes.
 
