@@ -10,8 +10,7 @@ class SweeperTest < Test::Unit::TestCase
     @dir = "/tmp/songs"
     @found_many = "#{@dir}/1_001.mp3"
     @found_one = "#{@dir}/1_010.mp3"
-    @not_found = "#{@dir}/1_002.mp3"
-    @invalid = "#{@dir}/1_003.mp3"
+    @not_found = "#{@dir}/1_003.mp3"
     @s = Sweeper.new('dir' => @dir)
   end
   
@@ -26,10 +25,8 @@ class SweeperTest < Test::Unit::TestCase
         "title"=>"Sugar Man - Tom Heyman",
         "url"=> "http://www.last.fm/music/Various+Artists+-+Vagabond+Productions/_/Sugar+Man+-+Tom+Heyman"},
       @s.lookup(@found_one))
-#    assert_equal({},
-#     @s.lookup(@not_found))
     assert_raises(Sweeper::Problem) do
-      @s.lookup(@invalid)
+      @s.lookup(@not_found)
     end
   end
   
