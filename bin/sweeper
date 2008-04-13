@@ -32,15 +32,15 @@ Choice.options do
   
   option :genre do
     short '-g'
-    long '--genre'
-    desc "Add genre tag and genre comments."
+    long '--genre=[force]'
+    desc "Add genre tag and genre comments, optionally overwriting existing ones."
   end
   
-  option :"force-genre" do
-    short '-e'
-    long '--force-genre'
-    desc "Add genre tag and genre comments, overwriting existing ones."
-  end    
+  option :'format' do
+    long '--format=[v1|v2]'
+    desc "Write ID3v1 tags (defaults ID3v2)."
+    default 'v2'
+  end
 end
 
 Sweeper.new(Choice.choices).run

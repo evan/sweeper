@@ -34,9 +34,9 @@ class Sweeper
 
   # Instantiate a new Sweeper. See <tt>bin/sweeper</tt> for <tt>options</tt> details.
   def initialize(options = {})
-    options['genre'] ||= options['force-genre']
     @dir = File.expand_path(options['dir'] || Dir.pwd)
     @options = options
+    @output_type = options['format'] == 'v1' ? ID3Lib::V1 : ID3Lib::V2
   end
   
   # Run the Sweeper according to the <tt>options</tt>.
@@ -75,7 +75,7 @@ class Sweeper
         begin
           current = read(filename)  
           updated = lookup(filename, current)
-          
+
           if updated != current 
             # Don't bother updating identical metadata.
             write(filename, updated)
@@ -107,6 +107,7 @@ class Sweeper
   
   # Lookup all available remote metadata for an mp3 file. Accepts a pathname and an optional hash of existing tags. Returns a tag hash. 
   def lookup(filename, tags = {})
+    tags = tags.dup
     updated = {}
 
     # Are there any empty basic tags we need to lookup?
@@ -117,16 +118,16 @@ class Sweeper
 
     # Are there any empty genre tags we need to lookup?
     if options['genre'] and 
-      (options['force'] or options['force-genre'] or (GENRE_KEYS - tags.keys).any?)
+      (options['force'] or options['genre'] == 'force' or (GENRE_KEYS - tags.keys).any?)
       updated.merge!(lookup_genre(updated.merge(tags)))
     end
 
     if options['force']
       # Force all remote tags.
       tags.merge!(updated)      
-    elsif options['force-genre']
+    elsif options['genre'] == 'force'
       # Force remote genre tags only.
-      tags.merge!(updated.slice('genre', 'comment'))
+      tags.merge!(updated.slice(*GENRE_KEYS))
     end
 
     # Merge back in existing tags.
@@ -204,7 +205,9 @@ class Sweeper
       puts "  #{key.capitalize}: #{song.send(key)}"
     end
     
-    song.update!(ID3Lib::V_ALL) unless options['dry-run']
+    unless options['dry-run']
+      song.update!(@output_type) 
+    end
   end    
   
   # Returns the path to the fingerprinter binary for this platform.
