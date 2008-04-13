@@ -129,7 +129,7 @@ class Sweeper
       rescue REXML::ParseException
         raise Problem, "Server sent invalid response."
       end              
-      raise Problem, "Fingerprint not found." unless object
+      raise Problem, "Fingerprint failed or not found." unless object
       
       tags = {}
       song = Array(object.track).first      
@@ -177,7 +177,7 @@ class Sweeper
   
   def write(filename, tags)
     return if tags.empty?
-    puts filename
+    puts File.basename(filename)
     
     file = ID3Lib::Tag.new(filename, ID3Lib::V2)
     tags.each do |key, value|
