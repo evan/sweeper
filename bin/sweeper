@@ -27,14 +27,20 @@ Choice.options do
   option :force do
     short '-f'
     long '--force'
-    desc 'Overwrite existing tags.'
+    desc 'Overwrite all existing tags.'
   end
   
   option :genre do
     short '-g'
     long '--genre'
-    desc "Add genre tags from Last.fm."
+    desc "Add genre and genre comments."
   end
+  
+  option :"force-genre" do
+    short '-e'
+    long '--force-genre'
+    desc "Add genre and genre comments, overwriting existing ones."
+  end    
 end
 
 Sweeper.new(Choice.choices).run

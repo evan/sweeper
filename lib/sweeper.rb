@@ -26,21 +26,32 @@ class Sweeper
   BASIC_KEYS = ['artist', 'title', 'url']
   GENRE_KEYS = ['genre', 'comment']
   GENRES = ID3Lib::Info::Genres.sort
+  GENRE_COUNT = 7
+  DEFAULT_GENRE = {'genre' => 'Other', 'comment' => 'other'}
 
   attr_reader :options
 
   def initialize(options = {})
+    options['genre'] ||= options['force-genre']
     @dir = File.expand_path(options['dir'] || Dir.pwd)
     @options = options
   end
   
-  def run
-    @processed = 0
+  def run      
+    @read = 0
+    @updated = 0
+    @failed = 0
+
+    Kernel.at_exit do
+      if @read == 0
+        puts "No files found."
+        exec "#{$0} --help"
+      else
+        puts "Read: #{@read}\nUpdated: #{@updated}\nFailed: #{@failed}"
+      end
+    end      
+
     recurse(@dir)
-    if @processed == 0
-      puts "No files found."
-      exec "#{$0} --help"
-    end
   end
   
   #private
@@ -50,14 +61,21 @@ class Sweeper
       if File.directory? filename and options['recursive']
         recurse(filename)
       elsif File.extname(filename) == ".mp3"
-        @processed += 1
+        @read += 1
         tries = 0
         begin
           current = read(filename)  
-          write(filename, lookup(filename, current, options['force']))
+          updated = lookup(filename, current)
+          
+          if updated != current
+            write(filename, updated)
+            @updated += 1
+          end
+          
         rescue Problem => e          
           tries += 1 and retry if tries < 2
           puts "Skipped #{filename}: #{e.message}"
+          @failed += 1
         end
       end
     end
@@ -74,23 +92,28 @@ class Sweeper
     (BASIC_KEYS + GENRE_KEYS).each do |key|      
       tags[key] = song.send(key) if !song.send(key).blank?
     end
+    
     tags
   end
   
-  def lookup(filename, tags = {}, force = false)
+  def lookup(filename, tags = {})
     updated = {}
-    if force or (BASIC_KEYS - tags.keys).any?
+    if options['force'] or 
+      (BASIC_KEYS - tags.keys).any?
       updated.merge!(lookup_basic(filename))
     end
-    if options['genre'] and (force or (GENRE_KEYS - tags.keys).any?)
+    if options['genre'] and 
+      (options['force'] or options['force-genre'] or (GENRE_KEYS - tags.keys).any?)
       updated.merge!(lookup_genre(updated.merge(tags)))
     end
 
-    if force
-      tags.merge(updated)
-    else
-      updated.merge(tags)
+    if options['force']
+      tags.merge!(updated)      
+    elsif options['force-genre']
+      tags.merge!(updated.slice('genre', 'comment'))
     end
+
+    updated.merge(tags)    
   end
   
   def lookup_basic(filename)
@@ -99,9 +122,9 @@ class Sweeper
       object = begin
         XSD::Mapping.xml2obj(response)
       rescue REXML::ParseException
-        raise Problem, "Invalid response."
+        raise Problem, "Server sent invalid response."
       end              
-      raise Problem, "Not found." unless object
+      raise Problem, "Fingerprint not found." unless object
       
       tags = {}
       song = Array(object.track).first      
@@ -114,13 +137,19 @@ class Sweeper
   end
   
   def lookup_genre(tags)
-    return tags if tags['artist'].blank?
-    response = open("http://ws.audioscrobbler.com/1.0/artist/#{URI.encode(tags['artist'])}/toptags.xml").read
+    return DEFAULT_GENRE if tags['artist'].blank?
+    
+    response = begin 
+      open("http://ws.audioscrobbler.com/1.0/artist/#{URI.encode(tags['artist'])}/toptags.xml").read
+    rescue OpenURI::HTTPError
+      return DEFAULT_GENRE
+    end
+    
     object = XSD::Mapping.xml2obj(response)
-    return {} if !object.respond_to? :tag
+    return DEFAULT_GENRE if !object.respond_to? :tag
 
-    genres = Array(object.tag)[0..4].map(&:name)
-    return {} if !genres.any?
+    genres = Array(object.tag)[0..(GENRE_COUNT - 1)].map(&:name)
+    return DEFAULT_GENRE if !genres.any?
     
     primary = nil
     genres.each do |this|
@@ -148,7 +177,7 @@ class Sweeper
     file = ID3Lib::Tag.new(filename, ID3Lib::V2)
     tags.each do |key, value|
       file.send("#{key}=", value)
-      puts "  #{value}"
+      puts "  #{key.capitalize}: #{value}"
     end
     file.update! unless options['dry-run']
   end    
