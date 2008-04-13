@@ -50,8 +50,13 @@ class Sweeper
         puts "Read: #{@read}\nUpdated: #{@updated}\nFailed: #{@failed}"
       end
     end      
-
-    recurse(@dir)
+  
+    begin
+      recurse(@dir)
+    rescue Object => e
+      puts "Unknown error: #{e.inspect}"
+      exit
+    end
   end
   
   #private
