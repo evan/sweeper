@@ -35,6 +35,10 @@ class SweeperTest < Test::Unit::TestCase
        {"genre"=>"Psychadelic", "comment"=>"rock psychedelic mod Philly"},
       @s.lookup_genre(@s.lookup_basic(@found_many))    
     )
+    assert_equal(
+      Sweeper::DEFAULT_GENRE,
+      @s.lookup_genre({})
+    )
   end
   
   def test_read
