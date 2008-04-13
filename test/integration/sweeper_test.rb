@@ -32,7 +32,7 @@ class SweeperTest < Test::Unit::TestCase
   
   def test_lookup_genre
     assert_equal(
-       {"genre"=>"Psychadelic", "comment"=>"rock psychedelic mod Philly"},
+       {"genre"=>"Psychadelic", "comment"=>"rock, psychedelic, mod, Philly"},
       @s.lookup_genre(@s.lookup_basic(@found_many))    
     )
     assert_equal(

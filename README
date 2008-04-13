@@ -40,13 +40,16 @@ Your mp3s will be updated with missing artist, genre, and trackname information,
 
 Sweeper takes a few command line options:
   
-    -d, --dir           Directory to search (defaults to current).
-    -r, --recursive     Recurse directories.
-        --dry-run       Do a dry run (no files will be changed).
-    -f, --force         Overwrite all existing tags.
-    -g, --genre         Add genre tag and genre comments.
-    -e, --force-genre   Add genre tag and genre comments, overwriting existing ones.
-        
+    -d, --dir            Directory to search (defaults to current).
+    -r, --recursive      Recurse directories.
+        --dry-run        Do a dry run (no files will be changed).
+    -f, --force          Overwrite all existing tags.
+    -g, --genre=[force]  Add genre tag and genre comments, optionally overwriting existing ones.
+
+== Notes
+
+You will get cleaner tags if you convert your files to ID3v2 first. Sweeper reads both tag versions, but only outputs ID3v2.
+
 == Reporting problems
 
 The support forum is here[http://rubyforge.org/forum/forum.php?forum_id=23599].

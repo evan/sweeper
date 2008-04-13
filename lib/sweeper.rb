@@ -26,7 +26,7 @@ class Sweeper
   BASIC_KEYS = ['artist', 'title', 'url']
   GENRE_KEYS = ['genre', 'comment']
   ALBUM_KEYS = ['album', 'track']
-  GENRES = ID3Lib::Info::Genres.sort
+  GENRES = ID3Lib::Info::Genres
   GENRE_COUNT = 7
   DEFAULT_GENRE = {'genre' => 'Other', 'comment' => 'other'}
 
@@ -46,7 +46,7 @@ class Sweeper
 
     Kernel.at_exit do
       if @read == 0
-        puts "No files found. Maybe you meant --recursive?"
+        puts "No mp3 files found. Maybe you meant --recursive?"
         exec "#{$0} --help"
       else
         puts "Read: #{@read}\nUpdated: #{@updated}\nFailed: #{@failed}"
@@ -75,7 +75,9 @@ class Sweeper
           current = read(filename)  
           updated = lookup(filename, current)
           
-          p current, updated
+          if ENV['DEBUG']
+            p current, updated
+          end
 
           if updated != current 
             # Don't bother updating identical metadata.
@@ -101,6 +103,12 @@ class Sweeper
     
     (BASIC_KEYS + GENRE_KEYS).each do |key|      
       tags[key] = song.send(key) if !song.send(key).blank?
+    end
+    
+    # Change numeric genres into TCON strings
+    # XXX Might not work well
+    if tags['genre'] =~ /(\d+)/
+      tags['genre'] = GENRES[$1.to_i]
     end
     
     tags
@@ -173,22 +181,28 @@ class Sweeper
     return DEFAULT_GENRE if !genres.any?
     
     primary = nil
-    genres.each do |this|
+    genres.each_with_index do |this, index|
       match_results = Amatch::Levenshtein.new(this).similar(GENRES)
+      # Get the levenshtein best-match weight
       max = match_results.max
+      # Reverse lookup the canonical genre
       match = GENRES[match_results.index(max)]
+      # Bias slightly towards higher tagging counts
+      max += ((GENRE_COUNT - index) / GENRE_COUNT / 4.0)
 
       if ['Rock', 'Pop', 'Rap'].include? match
         # Penalize useless genres
         max = max / 3.0
       end
+            
+      p [max, match] if ENV['DEBUG']
       
       if !primary or primary.first < max
         primary = [max, match]
       end
     end
     
-    {'genre' => primary.last, 'comment' => genres.sort.join(", ")}
+    {'genre' => primary.last, 'comment' => genres.join(", ")}
   end
   
   # Write tags to an mp3 file. Accepts a pathname and a tag hash.
@@ -207,7 +221,7 @@ class Sweeper
     end
     
     unless options['dry-run']
-      song.update!(ID3Lib::V1) 
+      song.update!(ID3Lib::V2) 
     end
   end    
   
