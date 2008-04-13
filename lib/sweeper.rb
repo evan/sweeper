@@ -74,7 +74,7 @@ class Sweeper
       raise Problem, "Lookup failure" unless object
       
       tags = {}
-      song = object.track.first      
+      song = Array(object.track).first      
       
       KEYS.each do |key|
         tags[key] = song.send(key) if song.respond_to? key

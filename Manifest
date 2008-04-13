@@ -1,6 +1,7 @@
 bin/sweeper
 CHANGELOG
 ext/extconf.rb
+ext/Makefile
 lib/sweeper.rb
 LICENSE
 Manifest
@@ -8,6 +9,7 @@ README
 test/integration/songs/1_001.mp3
 test/integration/songs/1_002.mp3
 test/integration/songs/1_003.mp3
+test/integration/songs/1_010.mp3
 test/integration/sweeper_test.rb
 vendor/lastfm.fpclient.beta2.linux-32/lastfmfpclient
 vendor/lastfm.fpclient.beta2.linux-32/readme.txt
