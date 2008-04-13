@@ -45,7 +45,7 @@ Sweeper takes a few command line options:
         --dry-run                    Do a dry run (no files will be changed).
     -f, --force                      Overwrite all existing tags.
     -g, --genre                      Add genre and genre comments.
-    -e, --force-genre                Add genre and genre comments, overwriting e
+    -e, --force-genre                Add genre and genre comments, overwriting existing ones.
         
 == Reporting problems
 
