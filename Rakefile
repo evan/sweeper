@@ -7,5 +7,5 @@ Echoe.new("sweeper") do |p|
   p.url = "http://blog.evanweaver.com/files/doc/fauna/sweeper/"
   p.docs_host = "blog.evanweaver.com:~/www/bax/public/files/doc/"
   p.dependencies = ['id3lib-ruby', 'choice', 'activesupport']
-  p.clean_pattern = ['doc', 'pkg']
+  p.clean_pattern = ['doc', 'pkg', 'test/integration/songs']
 end
