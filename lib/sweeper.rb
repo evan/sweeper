@@ -117,27 +117,28 @@ class Sweeper
     return tags if tags['artist'].blank?
     response = open("http://ws.audioscrobbler.com/1.0/artist/#{URI.encode(tags['artist'])}/toptags.xml").read
     object = XSD::Mapping.xml2obj(response)
-    genres = Array(object.tag)[0..4].map(&:name)
-    if genres.any?
-      primary = nil
-      genres.each do |this|
-        match_results = Amatch::Levenshtein.new(this).similar(GENRES)
-        max = match_results.max
-        match = GENRES[match_results.index(max)]
+    return {} if !object.respond_to? :tag
 
-        if ['Rock', 'Pop', 'Rap'].include? match
-          # Penalize useless genres
-          max = max / 3.0
-        end
-        
-        if !primary or primary.first < max
-          primary = [max, match]
-        end
+    genres = Array(object.tag)[0..4].map(&:name)
+    return {} if !genres.any?
+    
+    primary = nil
+    genres.each do |this|
+      match_results = Amatch::Levenshtein.new(this).similar(GENRES)
+      max = match_results.max
+      match = GENRES[match_results.index(max)]
+
+      if ['Rock', 'Pop', 'Rap'].include? match
+        # Penalize useless genres
+        max = max / 3.0
       end
-      {'genre' => primary.last, 'comment' => genres.join(" ")}
-    else
-      {}
+      
+      if !primary or primary.first < max
+        primary = [max, match]
+      end
     end
+    
+    {'genre' => primary.last, 'comment' => genres.join(" ")}
   end
   
   def write(filename, tags)

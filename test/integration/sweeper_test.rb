@@ -45,9 +45,9 @@ class SweeperTest < Test::Unit::TestCase
   end
   
   def test_write
-#    @s.silence do
+    @s.silence do
       @s.write(@found_many, @s.lookup(@found_many))
-#    end
+    end
     assert_equal(
       @s.lookup(@found_many),
       @s.read(@found_many))
