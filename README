@@ -34,6 +34,32 @@ Now, change to the directory of mp3s you want to tag and run:
 
 Your mp3s will be updated with missing artist, genre, and trackname information, and a list of all tagged genres will be added to the <tt>comment</tt> field, for use in smart playlists.
 
+== Demo
+
+Unknown song before sweeping:
+
+  $ id3info 1_001.mp3 
+  *** Tag information for 1_001.mp3
+  *** mp3 info
+  MPEG1/layer III
+  Bitrate: 128KBps
+  Frequency: 44KHz
+ 
+Same song after sweeping with <tt>--genre</tt>:
+
+  $ id3info 1_001.mp3   
+  *** Tag information for 1_001.mp3
+  === TPE1 (Lead performer(s)/Soloist(s)): Photon Band
+  === TIT2 (Title/songname/content description): To Sing For You
+  === WORS (Official internet radio station homepage): http://www.last.fm/music/Ph
+  oton+Band/_/To+Sing+For+You
+  === TCON (Content type): Psychadelic
+  === COMM (Comments): ()[]: rock, psychedelic, mod, Philly
+  *** mp3 info
+  MPEG1/layer III
+  Bitrate: 128KBps
+  Frequency: 44KHz
+
 == Options  
 
 Sweeper takes a few command line options:
