@@ -33,8 +33,15 @@ Just install the gem:
 
 Change to the directory of mp3s you want to tag and run:
   sweeper
+
+Your mp3s will be updated with missing artist and trackname information.
   
-That's all.
+If you want to include genre information, run:
+  sweeper --genre
+  
+Your mp3s will be updated with missing primary genre information, and a list of all tagged genres will be added to the <tt>comment</tt> field, for use in smart playlists.
+  
+See below for more options.
 
 == Options  
 
