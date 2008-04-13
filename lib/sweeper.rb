@@ -65,10 +65,13 @@ class Sweeper
   
   # Recurse one directory, reading, looking up, and writing each file, if appropriate. Accepts a directory path.
   def recurse(dir)
+    # Hackishly avoid problems with metacharacters in the Dir[] string.
+    dir = dir.gsub(/[^\s\w\.\/\\\-]/, '?')
+    # p dir if ENV['DEBUG']
     Dir["#{dir}/*"].each do |filename|
       if File.directory? filename and options['recursive']
         recurse(filename)
-      elsif File.extname(filename) == ".mp3"
+      elsif File.extname(filename) =~ /\.mp3$/i
         @read += 1
         tries = 0
         begin
