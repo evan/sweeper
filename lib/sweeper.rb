@@ -17,8 +17,8 @@ class Sweeper
 
   attr_reader :options
 
-  def initialize(dir, options = {})
-    @dir = dir
+  def initialize(options = {})
+    @dir = options['dir']
     @options = options
   end
   
@@ -39,6 +39,7 @@ class Sweeper
         recurse(filename)
       elsif File.extname(filename) == ".mp3"
         @processed += 1
+        tries = 0
         begin
           current = read(filename)
           remote = lookup(filename)
@@ -46,10 +47,11 @@ class Sweeper
           if options['force']
             write(filename, remote)
           else
-            write(filename, remote.except(current.keys))
+            write(filename, remote.except(*current.keys))
           end
-        rescue Problem => e
-          puts "Skipped #{filename}:\n  #{e.message}"
+        rescue Problem => e          
+          tries += 1 and retry if tries < 2
+          puts "Skipped #{filename}: #{e.message}"
         end
       end
     end
