@@ -44,7 +44,7 @@ class Sweeper
 
     Kernel.at_exit do
       if @read == 0
-        puts "No files found."
+        puts "No files found. Maybe you meant --recursive?"
         exec "#{$0} --help"
       else
         puts "Read: #{@read}\nUpdated: #{@updated}\nFailed: #{@failed}"
