@@ -30,11 +30,11 @@ Choice.options do
     desc 'Overwrite existing tags.'
   end
   
-  option :genre do
-    short '-g'
-    long '--genre'
-    desc 'Add genre tags from Last.fm.'
-  end
+#  option :genre do
+#    short '-g'
+#    long '--genre'
+#    desc 'Add genre tags from Last.fm.'
+#  end
 end
 
 Sweeper.new(Choice.choices).run
