@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'choice'
+require "#{File.dirname(__FILE__)}/../lib/sweeper"
+
+PROGRAM_VERSION = 0.1
+
+Choice.options do
+  option :dir do
+    short '-d'
+    long '--dir'
+    desc 'Directory to search (defaults to current).'
+    default Dir.pwd
+  end
+
+  option :recursive do
+    short '-r'
+    long '--recursive'
+    desc 'Recurse directories.'
+  end
+  
+  option :dry do
+    long '--dry-run'
+    desc 'Do a dry run (no files will be changed).'
+  end
+
+  option :force do
+    short '-f'
+    long '--force'
+    desc 'Overwrite existing tags.'
+  end
+  
+  option :genre do
+    short '-g'
+    long '--genre'
+    desc 'Add genre tags from Last.fm.'
+  end
+end
+
+Sweeper.new(Choice.choices).run

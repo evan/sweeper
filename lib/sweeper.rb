@@ -23,7 +23,11 @@ class Sweeper
   end
   
   def run
+    @processed = 0
     recurse(@dir)
+    if @processed == 0
+      puts "No files found."
+    end
   end
   
   #private
@@ -33,6 +37,7 @@ class Sweeper
       if File.directory? filename and options['recursive']
         recurse(filename)
       elsif File.extname(filename) == ".mp3"
+        @processed += 1
         begin
           current = read(filename)
           remote = lookup(filename)
