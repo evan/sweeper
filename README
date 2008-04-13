@@ -45,7 +45,7 @@ Unknown song before sweeping:
   Bitrate: 128KBps
   Frequency: 44KHz
  
-Same song after sweeping with <tt>--genre</tt>:
+Same song after running <tt>sweeper ----genre</tt>:
 
   $ id3info 1_001.mp3   
   *** Tag information for 1_001.mp3
