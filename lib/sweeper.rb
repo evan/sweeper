@@ -55,7 +55,7 @@ class Sweeper
       recurse(@dir)
     rescue Object => e
       puts "Unknown error: #{e.inspect}"
-      exit
+      ENV['DEBUG'] ? raise : exit
     end
   end
   
