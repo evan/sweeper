@@ -25,6 +25,7 @@ class Sweeper
 
   BASIC_KEYS = ['artist', 'title', 'url']
   GENRE_KEYS = ['genre', 'comment']
+  INFO_KEYS = ['album', 'track']
   GENRES = ID3Lib::Info::Genres.sort
   GENRE_COUNT = 7
   DEFAULT_GENRE = {'genre' => 'Other', 'comment' => 'other'}
@@ -72,14 +73,16 @@ class Sweeper
           current = read(filename)  
           updated = lookup(filename, current)
           
-          if updated != current
+          if updated != current 
             write(filename, updated)
             @updated += 1
+          else
+            puts "Unchanged: #{File.basename(filename)}"
           end
           
         rescue Problem => e          
           tries += 1 and retry if tries < 2
-          puts "Skipped #{File.basename(filename)}: #{e.message}"
+          puts "Skipped (#{e.message}): #{File.basename(filename)}"
           @failed += 1
         end
       end
@@ -177,14 +180,20 @@ class Sweeper
   
   def write(filename, tags)
     return if tags.empty?
-    puts File.basename(filename)
+    puts "Updated: #{File.basename(filename)}"
     
-    file = ID3Lib::Tag.new(filename, ID3Lib::V2)
+    song = ID3Lib::Tag.new(filename, ID3Lib::V2)
+    
     tags.each do |key, value|
-      file.send("#{key}=", value)
+      song.send("#{key}=", value)
       puts "  #{key.capitalize}: #{value}"
     end
-    file.update! unless options['dry-run']
+    INFO_KEYS.each do |key|
+      value = song.send(key)
+      puts "  #{key.capitalize}: #{value}" if value
+    end
+    
+    song.update! unless options['dry-run']
   end    
   
   def binary
