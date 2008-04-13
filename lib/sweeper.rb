@@ -18,7 +18,7 @@ class Sweeper
   attr_reader :options
 
   def initialize(options = {})
-    @dir = options['dir']
+    @dir = File.expand_path(options['dir'] || Dir.pwd)
     @options = options
   end
   
