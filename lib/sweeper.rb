@@ -72,9 +72,9 @@ class Sweeper
       object = begin
         XSD::Mapping.xml2obj(response)
       rescue REXML::ParseException
-        raise Problem, "Service returned invalid XML."
+        raise Problem, "Invalid response."
       end              
-      raise Problem, "Lookup failure." unless object
+      raise Problem, "Not found." unless object
       
       tags = {}
       song = Array(object.track).first      
