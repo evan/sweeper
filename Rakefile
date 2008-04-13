@@ -8,4 +8,5 @@ Echoe.new("sweeper") do |p|
   p.docs_host = "blog.evanweaver.com:~/www/bax/public/files/doc/"
   p.dependencies = ['id3lib-ruby', 'choice', 'activesupport']
   p.clean_pattern = ['doc', 'pkg', 'test/integration/songs']
+  p.rdoc_pattern = ['README', 'LICENSE', 'CHANGELOG', 'TODO', 'lib/*']
 end

@@ -14,16 +14,25 @@ If you use this software, please {make a donation}[http://blog.evanweaver.com/do
 * options
 * stuff
 
-= Usage
+== Usage
 
-== Installation
+First, install the gem:
+  sudo gem install sweeper
 
-Change to the directory of mp3s you want to tag and run:
+Now, change to the directory of mp3s you want to tag and run:
   sweeper
   
-You can get help via:
-  sweeper --help
+That's all.
 
+== Options  
+
+Sweeper takes a few command line options:
+  
+    -d, --dir                        Directory to search (defaults to current).
+    -r, --recursive                  Recurse directories.
+        --dry-run                    Do a dry run (no files will be changed).
+    -f, --force                      Overwrite existing tags.
+    
 == Reporting problems
 
 The support forum is here[http://rubyforge.org/forum/forum.php?forum_id=23599].
