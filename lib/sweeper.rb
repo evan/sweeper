@@ -186,7 +186,7 @@ class Sweeper
       end
     end
     
-    {'genre' => primary.last, 'comment' => genres.join(" ")}
+    {'genre' => primary.last, 'comment' => genres.sort.join(", ")}
   end
   
   # Write tags to an mp3 file. Accepts a pathname and a tag hash.

@@ -32,16 +32,9 @@ Just install the gem:
 == Usage
 
 Change to the directory of mp3s you want to tag and run:
-  sweeper
+  sweeper --genre --recursive
 
-Your mp3s will be updated with missing artist and trackname information.
-  
-If you want to include genre information, run:
-  sweeper --genre
-  
-Your mp3s will be updated with missing primary genre information, and a list of all tagged genres will be added to the <tt>comment</tt> field, for use in smart playlists.
-  
-See below for more options.
+Your mp3s will be updated with missing artist, genre, and trackname information, and a list of all tagged genres will be added to the <tt>comment</tt> field, for use in smart playlists.
 
 == Options  
 
@@ -51,8 +44,8 @@ Sweeper takes a few command line options:
     -r, --recursive     Recurse directories.
         --dry-run       Do a dry run (no files will be changed).
     -f, --force         Overwrite all existing tags.
-    -g, --genre         Add genre and genre comments.
-    -e, --force-genre   Add genre and genre comments, overwriting existing ones.
+    -g, --genre         Add genre tag and genre comments.
+    -e, --force-genre   Add genre tag and genre comments, overwriting existing ones.
         
 == Reporting problems
 

@@ -33,13 +33,13 @@ Choice.options do
   option :genre do
     short '-g'
     long '--genre'
-    desc "Add genre and genre comments."
+    desc "Add genre tag and genre comments."
   end
   
   option :"force-genre" do
     short '-e'
     long '--force-genre'
-    desc "Add genre and genre comments, overwriting existing ones."
+    desc "Add genre tag and genre comments, overwriting existing ones."
   end    
 end
 
