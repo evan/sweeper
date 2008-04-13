@@ -130,9 +130,9 @@ class Sweeper
       object = begin
         XSD::Mapping.xml2obj(response)
       rescue REXML::ParseException
-        raise Problem, "Server sent invalid response."
+        raise Problem, "Server sent invalid response"
       end              
-      raise Problem, "Fingerprint failed or not found." unless object
+      raise Problem, "Fingerprint failed or not found" unless object
       
       tags = {}
       song = Array(object.track).first      
