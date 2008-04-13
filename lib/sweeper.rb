@@ -27,6 +27,7 @@ class Sweeper
     recurse(@dir)
     if @processed == 0
       puts "No files found."
+      exec "#{$0} --help"
     end
   end
   

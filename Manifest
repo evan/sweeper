@@ -1,15 +1,10 @@
 bin/sweeper
 CHANGELOG
 lib/sweeper.rb
+Manifest
 test/integration/songs/1_001.mp3
 test/integration/songs/1_002.mp3
 test/integration/songs/1_003.mp3
-test/integration/songs/1_004.mp3
-test/integration/songs/1_005.mp3
-test/integration/songs/1_006.mp3
-test/integration/songs/1_007.mp3
-test/integration/songs/1_008.mp3
-test/integration/songs/1_009.mp3
 test/integration/sweeper_test.rb
 vendor/lastfm.fpclient.beta2.linux-32/lastfmfpclient
 vendor/lastfm.fpclient.beta2.linux-32/readme.txt
@@ -28,4 +23,3 @@ vendor/lastfm.fpclient.beta2.win32/msvcp80.dll
 vendor/lastfm.fpclient.beta2.win32/msvcr80.dll
 vendor/lastfm.fpclient.beta2.win32/taglib.dll
 vendor/lastfm.fpclient.beta2.win32/zlib1.dll
-Manifest
