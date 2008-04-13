@@ -91,11 +91,7 @@ class Sweeper
   
   def read(filename)
     tags = {}
-
-    song = ID3Lib::Tag.new(filename, ID3Lib::V2)
-    if song.empty?
-      song = ID3Lib::Tag.new(filename, ID3Lib::V1)
-    end
+    song = load(filename)
     
     (BASIC_KEYS + GENRE_KEYS).each do |key|      
       tags[key] = song.send(key) if !song.send(key).blank?
@@ -182,7 +178,7 @@ class Sweeper
     return if tags.empty?
     puts "Updated: #{File.basename(filename)}"
     
-    song = ID3Lib::Tag.new(filename, ID3Lib::V2)
+    song = load(filename)
     
     tags.each do |key, value|
       song.send("#{key}=", value)
@@ -193,7 +189,7 @@ class Sweeper
       puts "  #{key.capitalize}: #{value}" if value
     end
     
-    song.update! unless options['dry-run']
+    song.update!(ID3Lib::V_ALL) unless options['dry-run']
   end    
   
   def binary
@@ -207,6 +203,14 @@ class Sweeper
           "lastfm.fpclient.beta2.linux-32/lastfmfpclient"
         end
   end
+  
+  def load(filename)    
+    song = ID3Lib::Tag.new(filename, ID3Lib::V2)
+    if song.empty?
+      song = ID3Lib::Tag.new(filename, ID3Lib::V1)
+    end
+    song
+  end  
   
   def silence(outf = nil, errf = nil)
     # This method is annoying.
