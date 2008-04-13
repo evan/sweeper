@@ -27,7 +27,7 @@ class Sweeper
   GENRE_KEYS = ['genre', 'comment']
   ALBUM_KEYS = ['album', 'track']
   GENRES = ID3Lib::Info::Genres
-  GENRE_COUNT = 7
+  GENRE_COUNT = 10
   DEFAULT_GENRE = {'genre' => 'Other', 'comment' => 'other'}
 
   attr_reader :options
