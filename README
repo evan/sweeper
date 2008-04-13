@@ -47,12 +47,12 @@ See below for more options.
 
 Sweeper takes a few command line options:
   
-    -d, --dir                        Directory to search (defaults to current).
-    -r, --recursive                  Recurse directories.
-        --dry-run                    Do a dry run (no files will be changed).
-    -f, --force                      Overwrite all existing tags.
-    -g, --genre                      Add genre and genre comments.
-    -e, --force-genre                Add genre and genre comments, overwriting existing ones.
+    -d, --dir           Directory to search (defaults to current).
+    -r, --recursive     Recurse directories.
+        --dry-run       Do a dry run (no files will be changed).
+    -f, --force         Overwrite all existing tags.
+    -g, --genre         Add genre and genre comments.
+    -e, --force-genre   Add genre and genre comments, overwriting existing ones.
         
 == Reporting problems
 
