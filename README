@@ -12,14 +12,17 @@ If you use this software, please {make a donation}[http://blog.evanweaver.com/do
 == Features
 
 * faster than MusicBrainz
-* more accurate than MusicBrainz
+* better results than MusicBrainz
+* smart genre tagging
+
+<b>WARNING: This is beta software. Backup your music collection first.</b>
 
 == Requirements
 
 * Linux, Intel OS X, or Windows
-* mp3 files
-* id3lib (Linux and OS X only)
 * Ruby and Rubygems
+* id3lib (Linux and OS X only)
+* some mp3 files
 
 == Installation
 
