@@ -14,12 +14,21 @@ If you use this software, please {make a donation}[http://blog.evanweaver.com/do
 * faster than MusicBrainz
 * more accurate than MusicBrainz
 
-== Usage
+== Requirements
 
-First, install the gem:
+* Linux, Intel OS X, or Windows
+* mp3 files
+* id3lib (Linux and OS X only)
+* Ruby and Rubygems
+
+== Installation
+
+Just install the gem:
   sudo gem install sweeper
 
-Now, change to the directory of mp3s you want to tag and run:
+== Usage
+
+Change to the directory of mp3s you want to tag and run:
   sweeper
   
 That's all.

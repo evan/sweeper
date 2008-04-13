@@ -19,7 +19,7 @@ Choice.options do
     desc 'Recurse directories.'
   end
   
-  option :dry do
+  option :"dry-run" do
     long '--dry-run'
     desc 'Do a dry run (no files will be changed).'
   end
@@ -30,11 +30,11 @@ Choice.options do
     desc 'Overwrite existing tags.'
   end
   
-#  option :genre do
-#    short '-g'
-#    long '--genre'
-#    desc 'Add genre tags from Last.fm.'
-#  end
+  option :genre do
+    short '-g'
+    long '--genre'
+    desc "Add genre tags from Last.fm."
+  end
 end
 
 Sweeper.new(Choice.choices).run

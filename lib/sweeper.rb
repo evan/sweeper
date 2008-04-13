@@ -3,17 +3,29 @@ require 'rubygems'
 require 'id3lib'
 require 'xsd/mapping'
 require 'activesupport'
+require 'open-uri'
+require 'uri'
+require 'amatch'
 
 class ID3Lib::Tag
-  alias :url :comment
-  alias :url= :comment=
+  def url
+    f = frame(:WORS)
+    f ? f[:url] : nil
+  end
+  
+  def url=(s)
+    remove_frame(:WORS)    
+    self << {:id => :WORS, :url => s} if s.any?
+  end
 end
 
 class Sweeper
 
   class Problem < RuntimeError; end
 
-  KEYS = ['artist', 'title', 'url']
+  BASIC_KEYS = ['artist', 'title', 'url']
+  GENRE_KEYS = ['genre', 'comment']
+  GENRES = ID3Lib::Info::Genres.sort
 
   attr_reader :options
 
@@ -41,13 +53,8 @@ class Sweeper
         @processed += 1
         tries = 0
         begin
-          current = read(filename)
-  
-          if options['force']
-            write(filename, lookup(filename))
-          elsif current.keys.size < KEYS.size            
-            write(filename, lookup(filename).except(*current.keys))
-          end
+          current = read(filename)  
+          write(filename, lookup(filename, current, options['force']))
         rescue Problem => e          
           tries += 1 and retry if tries < 2
           puts "Skipped #{filename}: #{e.message}"
@@ -58,15 +65,35 @@ class Sweeper
   
   def read(filename)
     tags = {}
-    song = ID3Lib::Tag.new(filename)
+
+    song = ID3Lib::Tag.new(filename, ID3Lib::V2)
+    if song.empty?
+      song = ID3Lib::Tag.new(filename, ID3Lib::V1)
+    end
     
-    KEYS.each do |key|      
+    (BASIC_KEYS + GENRE_KEYS).each do |key|      
       tags[key] = song.send(key) if !song.send(key).blank?
     end
     tags
   end
   
-  def lookup(filename)
+  def lookup(filename, tags = {}, force = false)
+    updated = {}
+    if force or (BASIC_KEYS - tags.keys).any?
+      updated.merge!(lookup_basic(filename))
+    end
+    if options['genre'] and (force or (GENRE_KEYS - tags.keys).any?)
+      updated.merge!(lookup_genre(updated.merge(tags)))
+    end
+
+    if force
+      tags.merge(updated)
+    else
+      updated.merge(tags)
+    end
+  end
+  
+  def lookup_basic(filename)
     Dir.chdir File.dirname(binary) do
       response = silence { `./#{File.basename(binary)} #{filename}` }
       object = begin
@@ -79,10 +106,37 @@ class Sweeper
       tags = {}
       song = Array(object.track).first      
       
-      KEYS.each do |key|
+      BASIC_KEYS.each do |key|
         tags[key] = song.send(key) if song.respond_to? key
       end
       tags
+    end
+  end
+  
+  def lookup_genre(tags)
+    return tags if tags['artist'].blank?
+    response = open("http://ws.audioscrobbler.com/1.0/artist/#{URI.encode(tags['artist'])}/toptags.xml").read
+    object = XSD::Mapping.xml2obj(response)
+    genres = Array(object.tag)[0..4].map(&:name)
+    if genres.any?
+      primary = nil
+      genres.each do |this|
+        match_results = Amatch::Levenshtein.new(this).similar(GENRES)
+        max = match_results.max
+        match = GENRES[match_results.index(max)]
+
+        if ['Rock', 'Pop', 'Rap'].include? match
+          # Penalize useless genres
+          max = max / 3.0
+        end
+        
+        if !primary or primary.first < max
+          primary = [max, match]
+        end
+      end
+      {'genre' => primary.last, 'comment' => genres.join(" ")}
+    else
+      {}
     end
   end
   
@@ -90,12 +144,12 @@ class Sweeper
     return if tags.empty?
     puts filename
     
-    file = ID3Lib::Tag.new(filename)
+    file = ID3Lib::Tag.new(filename, ID3Lib::V2)
     tags.each do |key, value|
       file.send("#{key}=", value)
       puts "  #{value}"
     end
-    file.update! unless options['dry']
+    file.update! unless options['dry-run']
   end    
   
   def binary
