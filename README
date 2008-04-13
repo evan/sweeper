@@ -36,7 +36,7 @@ Your mp3s will be updated with missing artist, genre, and trackname information,
 
 == Demo
 
-Unknown song before sweeping:
+Unknown song:
 
   $ id3info 1_001.mp3 
   *** Tag information for 1_001.mp3
