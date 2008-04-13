@@ -36,7 +36,6 @@ class Sweeper
   def initialize(options = {})
     @dir = File.expand_path(options['dir'] || Dir.pwd)
     @options = options
-    @output_type = options['format'] == 'v1' ? ID3Lib::V1 : ID3Lib::V2
   end
   
   # Run the Sweeper according to the <tt>options</tt>.
@@ -75,6 +74,8 @@ class Sweeper
         begin
           current = read(filename)  
           updated = lookup(filename, current)
+          
+          p current, updated
 
           if updated != current 
             # Don't bother updating identical metadata.
@@ -206,7 +207,7 @@ class Sweeper
     end
     
     unless options['dry-run']
-      song.update!(@output_type) 
+      song.update!(ID3Lib::V1) 
     end
   end    
   
