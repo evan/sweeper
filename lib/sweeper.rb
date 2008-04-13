@@ -79,7 +79,7 @@ class Sweeper
           
         rescue Problem => e          
           tries += 1 and retry if tries < 2
-          puts "Skipped #{filename}: #{e.message}"
+          puts "Skipped #{File.basename(filename)}: #{e.message}"
           @failed += 1
         end
       end
