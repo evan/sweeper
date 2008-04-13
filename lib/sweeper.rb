@@ -240,12 +240,7 @@ class Sweeper
   
   # Loads metadata for an mp3 file. Looks for which ID3 version is already populated, instead of just the existence of frames.
   def load(filename) 
-    # XXX Does this actually do anything better than using ID3Lib::V_ALL?   
-    song = ID3Lib::Tag.new(filename, ID3Lib::V2)
-    if song.empty?
-      song = ID3Lib::Tag.new(filename, ID3Lib::V1)
-    end
-    song
+    ID3Lib::Tag.new(filename, ID3Lib::V_ALL)
   end  
   
   # Silence STDERR and STDOUT for the duration of the block.

@@ -24,14 +24,12 @@ If you use this software, please {make a donation}[http://blog.evanweaver.com/do
 * id3lib (Linux and OS X only)
 * some mp3 files
 
-== Installation
-
-Just install the gem:
-  sudo gem install sweeper
-
 == Usage
 
-Change to the directory of mp3s you want to tag and run:
+First, install the gem:
+  sudo gem install sweeper
+
+Now, change to the directory of mp3s you want to tag and run:
   sweeper --genre --recursive
 
 Your mp3s will be updated with missing artist, genre, and trackname information, and a list of all tagged genres will be added to the <tt>comment</tt> field, for use in smart playlists.
@@ -44,7 +42,8 @@ Sweeper takes a few command line options:
     -r, --recursive      Recurse directories.
         --dry-run        Do a dry run (no files will be changed).
     -f, --force          Overwrite all existing tags.
-    -g, --genre=[force]  Add genre tag and genre comments, optionally overwriting existing ones.
+    -g, --genre=[force]  Add genre tag and genre comments, optionally overwriting 
+                         existing ones.
 
 == Notes
 
