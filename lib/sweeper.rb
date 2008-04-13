@@ -25,19 +25,21 @@ class Sweeper
 
   BASIC_KEYS = ['artist', 'title', 'url']
   GENRE_KEYS = ['genre', 'comment']
-  INFO_KEYS = ['album', 'track']
+  ALBUM_KEYS = ['album', 'track']
   GENRES = ID3Lib::Info::Genres.sort
   GENRE_COUNT = 7
   DEFAULT_GENRE = {'genre' => 'Other', 'comment' => 'other'}
 
   attr_reader :options
 
+  # Instantiate a new Sweeper. See <tt>bin/sweeper</tt> for <tt>options</tt> details.
   def initialize(options = {})
     options['genre'] ||= options['force-genre']
     @dir = File.expand_path(options['dir'] || Dir.pwd)
     @options = options
   end
   
+  # Run the Sweeper according to the <tt>options</tt>.
   def run      
     @read = 0
     @updated = 0
@@ -62,6 +64,7 @@ class Sweeper
   
   #private
   
+  # Recurse one directory, reading, looking up, and writing each file, if appropriate. Accepts a directory path.
   def recurse(dir)
     Dir["#{dir}/*"].each do |filename|
       if File.directory? filename and options['recursive']
@@ -74,6 +77,7 @@ class Sweeper
           updated = lookup(filename, current)
           
           if updated != current 
+            # Don't bother updating identical metadata.
             write(filename, updated)
             @updated += 1
           else
@@ -86,9 +90,10 @@ class Sweeper
           @failed += 1
         end
       end
-    end
+    end  
   end
   
+  # Read tags from an mp3 file. Returns a tag hash.
   def read(filename)
     tags = {}
     song = load(filename)
@@ -100,26 +105,35 @@ class Sweeper
     tags
   end
   
+  # Lookup all available remote metadata for an mp3 file. Accepts a pathname and an optional hash of existing tags. Returns a tag hash. 
   def lookup(filename, tags = {})
     updated = {}
+
+    # Are there any empty basic tags we need to lookup?
     if options['force'] or 
       (BASIC_KEYS - tags.keys).any?
       updated.merge!(lookup_basic(filename))
     end
+
+    # Are there any empty genre tags we need to lookup?
     if options['genre'] and 
       (options['force'] or options['force-genre'] or (GENRE_KEYS - tags.keys).any?)
       updated.merge!(lookup_genre(updated.merge(tags)))
     end
 
     if options['force']
+      # Force all remote tags.
       tags.merge!(updated)      
     elsif options['force-genre']
+      # Force remote genre tags only.
       tags.merge!(updated.slice('genre', 'comment'))
     end
 
+    # Merge back in existing tags.
     updated.merge(tags)    
   end
   
+  # Lookup the basic metadata for an mp3 file. Accepts a pathname. Returns a tag hash.
   def lookup_basic(filename)
     Dir.chdir File.dirname(binary) do
       response = silence { `./#{File.basename(binary)} #{filename.inspect}` }
@@ -139,7 +153,8 @@ class Sweeper
       tags
     end
   end
-  
+
+  # Lookup the genre metadata for a set of basic metadata. Accepts a tag hash. Returns a genre tag hash.  
   def lookup_genre(tags)
     return DEFAULT_GENRE if tags['artist'].blank?
     
@@ -174,6 +189,7 @@ class Sweeper
     {'genre' => primary.last, 'comment' => genres.join(" ")}
   end
   
+  # Write tags to an mp3 file. Accepts a pathname and a tag hash.
   def write(filename, tags)
     return if tags.empty?
     puts "Updated: #{File.basename(filename)}"
@@ -184,14 +200,14 @@ class Sweeper
       song.send("#{key}=", value)
       puts "  #{key.capitalize}: #{value}"
     end
-    INFO_KEYS.each do |key|
-      value = song.send(key)
-      puts "  #{key.capitalize}: #{value}" if value
+    ALBUM_KEYS.each do |key|
+      puts "  #{key.capitalize}: #{song.send(key)}"
     end
     
     song.update!(ID3Lib::V_ALL) unless options['dry-run']
   end    
   
+  # Returns the path to the fingerprinter binary for this platform.
   def binary
     @binary ||= "#{File.dirname(__FILE__)}/../vendor/" + 
       case RUBY_PLATFORM
@@ -204,7 +220,9 @@ class Sweeper
         end
   end
   
-  def load(filename)    
+  # Loads metadata for an mp3 file. Looks for which ID3 version is already populated, instead of just the existence of frames.
+  def load(filename) 
+    # XXX Does this actually do anything better than using ID3Lib::V_ALL?   
     song = ID3Lib::Tag.new(filename, ID3Lib::V2)
     if song.empty?
       song = ID3Lib::Tag.new(filename, ID3Lib::V1)
@@ -212,6 +230,7 @@ class Sweeper
     song
   end  
   
+  # Silence STDERR and STDOUT for the duration of the block.
   def silence(outf = nil, errf = nil)
     # This method is annoying.
     outf, errf = Tempfile.new("stdout"), Tempfile.new("stderr")

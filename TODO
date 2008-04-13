@@ -1,3 +1,2 @@
 
-* Add genres via http://ws.audioscrobbler.com/1.0/artist/ARTIST/toptags.xml service.
-* Some kind of album detection?
+* Album detection via set clustering on http://ws.audioscrobbler.com/1.0/album/ARTIST/ALBUM/info.xml .
