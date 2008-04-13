@@ -69,8 +69,12 @@ class Sweeper
   def lookup(filename)
     Dir.chdir File.dirname(binary) do
       response = silence { `./#{File.basename(binary)} #{filename}` }
-      object = XSD::Mapping.xml2obj(response)
-      raise Problem, "Lookup failure" unless object
+      object = begin
+        XSD::Mapping.xml2obj(response)
+      rescue REXML::ParseException
+        raise Problem, "Service returned invalid XML."
+      end              
+      raise Problem, "Lookup failure." unless object
       
       tags = {}
       song = Array(object.track).first      
