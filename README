@@ -3,7 +3,7 @@ Automatically tag your music collection with metadata from Last.fm.
 
 == License
 
-Copyright 2008 Cloudburst, LLC. Licensed under the AFL 3. See the included LICENSE file. Unlinked portions copyright 2008 Last.fm Ltd., used by permission, and licensed under the GPL2.
+Copyright 2008 Cloudburst, LLC. Licensed under the AFL 3. See the included LICENSE file. Unlinked portions copyright 2008 Last.fm Ltd., used by permission, and licensed under the GPL 2.
 
 The public certificate for the gem is here[http://rubyforge.org/frs/download.php/25331/evan_weaver-original-public_cert.pem]. 
 
@@ -11,8 +11,8 @@ If you use this software, please {make a donation}[http://blog.evanweaver.com/do
 
 == Features
 
-* options
-* stuff
+* faster than MusicBrainz
+* more accurate than MusicBrainz
 
 == Usage
 

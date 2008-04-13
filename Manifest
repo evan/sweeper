@@ -7,6 +7,7 @@ LICENSE
 Manifest
 README
 test/integration/sweeper_test.rb
+TODO
 vendor/lastfm.fpclient.beta2.linux-32/lastfmfpclient
 vendor/lastfm.fpclient.beta2.linux-32/readme.txt
 vendor/lastfm.fpclient.beta2.OSX-intel/lastfmfpclient
