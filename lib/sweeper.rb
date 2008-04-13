@@ -42,12 +42,11 @@ class Sweeper
         tries = 0
         begin
           current = read(filename)
-          remote = lookup(filename)
   
           if options['force']
-            write(filename, remote)
-          else
-            write(filename, remote.except(*current.keys))
+            write(filename, lookup(filename))
+          elsif current.keys.size < KEYS.size            
+            write(filename, lookup(filename).except(*current.keys))
           end
         rescue Problem => e          
           tries += 1 and retry if tries < 2
