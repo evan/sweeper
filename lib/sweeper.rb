@@ -175,7 +175,7 @@ class Sweeper
     
     response = begin 
       open("http://ws.audioscrobbler.com/1.0/artist/#{URI.encode(tags['artist'])}/toptags.xml").read
-    rescue OpenURI::HTTPError
+    rescue OpenURI::HTTPError, URI::InvalidURIError
       return DEFAULT_GENRE
     end
     
