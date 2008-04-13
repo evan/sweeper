@@ -123,7 +123,7 @@ class Sweeper
   
   def lookup_basic(filename)
     Dir.chdir File.dirname(binary) do
-      response = silence { `./#{File.basename(binary)} #{filename}` }
+      response = silence { `./#{File.basename(binary)} #{filename.inspect}` }
       object = begin
         XSD::Mapping.xml2obj(response)
       rescue REXML::ParseException
