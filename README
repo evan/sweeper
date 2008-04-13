@@ -34,6 +34,8 @@ Now, change to the directory of mp3s you want to tag and run:
 
 Your mp3s will be updated with missing artist, genre, and trackname information, and a list of all tagged genres will be added to the <tt>comment</tt> field, for use in smart playlists.
 
+You do not need a Last.fm account to use Sweeper.
+
 == Demo
 
 Unknown song:
