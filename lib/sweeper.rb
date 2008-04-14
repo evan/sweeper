@@ -94,7 +94,7 @@ class Sweeper
           
         rescue Problem => e          
           tries += 1 and retry if tries < 2
-          puts "Skipped (#{e.message}): #{File.basename(filename)}"
+          puts "Skipped (#{e.message.gsub("\n", " ")}): #{File.basename(filename)}"
           @failed += 1
         end
       end
@@ -154,16 +154,16 @@ class Sweeper
       response = `./#{File.basename(binary)} #{filename.inspect} 2> #{@errf.path}`
       object = begin
         XSD::Mapping.xml2obj(response)
-      rescue REXML::ParseException
-        raise Problem, "Server sent invalid response"
+      rescue Object => e
+        raise Problem, "#{e.class.name} - #{e.message}"
       end              
-      raise Problem, "Fingerprint failed or not found" unless object
+      raise Problem, "Fingerprint failed" unless object
       
       tags = {}
       song = Array(object.track).first      
       
       BASIC_KEYS.each do |key|
-        tags[key] = song.send(key) if song.respond_to? key
+        tags[key] = song.send(key) if song.respond_to? key 
       end
       tags
     end
@@ -175,11 +175,18 @@ class Sweeper
     
     response = begin 
       open("http://ws.audioscrobbler.com/1.0/artist/#{URI.encode(tags['artist'])}/toptags.xml").read
-    rescue OpenURI::HTTPError, URI::InvalidURIError
+    rescue Object => e
+      puts "Open-URI error: #{e.class.name} - #{e.message}" if ENV['DEBUG']
       return DEFAULT_GENRE
     end
     
-    object = XSD::Mapping.xml2obj(response)
+    begin
+      object = XSD::Mapping.xml2obj(response)
+    rescue Object => e
+      puts "XSD error: #{e.class.name} - #{e.message}" if ENV['DEBUG']
+      return DEFAULT_GENRE
+    end    
+     
     return DEFAULT_GENRE if !object.respond_to? :tag
 
     genres = Array(object.tag)[0..(GENRE_COUNT - 1)].map(&:name)

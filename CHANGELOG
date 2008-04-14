@@ -1,4 +1,6 @@
 
+v0.2.4. More robust XSD error handling.
+
 v0.2.3. Rescue another OpenURI error.
 
 v0.2.2. Avoid error with too many open files.
