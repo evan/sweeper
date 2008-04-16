@@ -255,10 +255,15 @@ class Sweeper
     @match_cache[string] ||= begin
       results = {}
       GENRES.each do |genre|
-        results[Text::Levenshtein.distance(genre, string)] = genre
+        results[genre] = Text::Levenshtein.distance(genre, string)
       end    
-      min = results.keys.min
-      match = results[min]
+      
+      min = results.values.min
+      match = results.select do |_, weight| 
+        weight == min
+      end.sort_by do |match, _|
+        -match.size
+      end.first.first
       
       [match, normalize(match, string, min)]
     end    
