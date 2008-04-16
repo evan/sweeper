@@ -161,7 +161,9 @@ class Sweeper
   # Lookup the basic metadata for an mp3 file. Accepts a pathname. Returns a tag hash.
   def lookup_basic(filename)
     Dir.chdir File.dirname(binary) do
-      response = `./#{File.basename(binary)} #{filename.inspect} 2> #{@null}`
+      cmd = "#{binary} #{filename.inspect} 2> #{@null}"
+      p cmd if ENV['DEBUG']
+      response = `#{cmd}`
       object = begin
         XSD::Mapping.xml2obj(response)
       rescue Object => e
@@ -245,12 +247,12 @@ class Sweeper
   
   # Returns the path to the fingerprinter binary for this platform.
   def binary
-    @binary ||= "#{File.dirname(__FILE__)}/../vendor/" + 
+    @binary ||= "#{File.expand_path(File.dirname(__FILE__))}/../vendor/" + 
       case RUBY_PLATFORM
-        when /darwin/
-          "lastfm.fpclient.beta2.OSX-intel/lastfmfpclient"
         when /win32/
           "lastfm.fpclient.beta2.win32/lastfmfpclient.exe"
+        when /darwin/
+          "lastfm.fpclient.beta2.OSX-intel/lastfmfpclient"
         else 
           "lastfm.fpclient.beta2.linux-32/lastfmfpclient"
         end
