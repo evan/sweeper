@@ -212,7 +212,7 @@ class Sweeper
       end
     end
     
-    {'genre' => primary.last, 'comment' => genres.sort.join(", ")}
+    {'genre' => primary.last, 'comment' => genres.join(", ")}
   end
   
   # Write tags to an mp3 file. Accepts a pathname and a tag hash.
@@ -267,9 +267,8 @@ class Sweeper
   end
   
   def normalize(genre, string, weight)
-    # Normalize
     # XXX Algorithm may not be right
-    normalized = if weight == 0
+    if weight == 0
       1.0
     elsif weight >= genre.size
       0.0
@@ -277,7 +276,7 @@ class Sweeper
       1.0 - (weight / genre.size.to_f)
     else
       1.0 - (weight / string.size.to_f)
-    end
-   end  
+    end    
+  end  
   
 end
