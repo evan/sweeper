@@ -7,6 +7,8 @@ require 'open-uri'
 require 'uri'
 require 'Text'
 
+require 'ruby-debug' if ENV['DEBUG']
+
 class ID3Lib::Tag
   def url
     f = frame(:WORS)
@@ -210,7 +212,7 @@ class Sweeper
       end
     end
     
-    {'genre' => primary.last, 'comment' => genres.join(", ")}
+    {'genre' => primary.last, 'comment' => genres.sort.join(", ")}
   end
   
   # Write tags to an mp3 file. Accepts a pathname and a tag hash.
@@ -255,15 +257,10 @@ class Sweeper
     @match_cache[string] ||= begin
       results = {}
       GENRES.each do |genre|
-        results[genre] = Text::Levenshtein.distance(genre, string)
+        results[Text::Levenshtein.distance(genre, string)] = genre
       end    
-      
-      min = results.values.min
-      match = results.select do |_, weight| 
-        weight == min
-      end.sort_by do |match, _|
-        -match.size
-      end.first.first
+      min = results.keys.min
+      match = results[min]
       
       [match, normalize(match, string, min)]
     end    
