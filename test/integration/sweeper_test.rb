@@ -1,7 +1,7 @@
 
 require 'test/unit'
 require "#{File.dirname(__FILE__)}/../../lib/sweeper"
-require 'ruby-debug'
+begin; require 'ruby-debug'; rescue LoadError; end
 
 class SweeperTest < Test::Unit::TestCase
   def setup

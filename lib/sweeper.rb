@@ -7,7 +7,7 @@ require 'open-uri'
 require 'uri'
 require 'Text'
 
-#require 'ruby-debug' if ENV['DEBUG']
+begin; require 'ruby-debug' if ENV['DEBUG']; rescue LoadError; end 
 
 class ID3Lib::Tag
   def url
