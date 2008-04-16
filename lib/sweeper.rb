@@ -5,7 +5,7 @@ require 'xsd/mapping'
 require 'activesupport'
 require 'open-uri'
 require 'uri'
-require 'amatch'
+require 'Text'
 
 class ID3Lib::Tag
   def url
@@ -36,8 +36,8 @@ class Sweeper
   def initialize(options = {})
     @dir = File.expand_path(options['dir'] || Dir.pwd)
     @options = options
-    @outf = Tempfile.new("stdout")
-    @errf = Tempfile.new("stderr")    
+    @errf = Tempfile.new("stderr")
+    @match_cache = {}    
   end
   
   # Run the Sweeper according to the <tt>options</tt>.
@@ -194,23 +194,19 @@ class Sweeper
     
     primary = nil
     genres.each_with_index do |this, index|
-      match_results = Amatch::Levenshtein.new(this).similar(GENRES)
-      # Get the levenshtein best-match weight
-      max = match_results.max
-      # Reverse lookup the canonical genre
-      match = GENRES[match_results.index(max)]
+      match, weight = nearest_genre(this)
       # Bias slightly towards higher tagging counts
-      max += ((GENRE_COUNT - index) / GENRE_COUNT / 4.0)
+      weight += ((GENRE_COUNT - index) / GENRE_COUNT / 4.0)
 
       if ['Rock', 'Pop', 'Rap'].include? match
         # Penalize useless genres
-        max = max / 3.0
+        weight = weight / 3.0
       end
             
-      p [max, match] if ENV['DEBUG']
+      p [weight, match] if ENV['DEBUG']
       
-      if !primary or primary.first < max
-        primary = [max, match]
+      if !primary or primary.first < weight
+        primary = [weight, match]
       end
     end
     
@@ -254,5 +250,32 @@ class Sweeper
   def load(filename) 
     ID3Lib::Tag.new(filename, ID3Lib::V_ALL)
   end  
+  
+  def nearest_genre(string)
+    @match_cache[string] ||= begin
+      results = {}
+      GENRES.each do |genre|
+        results[Text::Levenshtein.distance(genre, string)] = genre
+      end    
+      min = results.keys.min
+      match = results[min]
+      
+      [match, normalize(match, string, min)]
+    end    
+  end
+  
+  def normalize(genre, string, weight)
+    # Normalize
+    # XXX Algorithm may not be right
+    normalized = if weight == 0
+      1.0
+    elsif weight >= genre.size
+      0.0
+    elsif genre.size >= string.size
+      1.0 - (weight / genre.size.to_f)
+    else
+      1.0 - (weight / string.size.to_f)
+    end
+   end  
   
 end

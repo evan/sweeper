@@ -41,6 +41,13 @@ class SweeperTest < Test::Unit::TestCase
     )
   end
   
+  def test_genre_weighting
+    match, weight = @s.nearest_genre('psychedelic')    
+    assert_equal match, 'Psychadelic'
+    assert(weight < 1)
+    assert(weight > 0)
+  end
+  
   def test_read
     assert_equal({}, 
       @s.read(@found_many))
