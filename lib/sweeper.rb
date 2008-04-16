@@ -51,7 +51,6 @@ class Sweeper
     Kernel.at_exit do
       if @read == 0
         puts "No mp3 files found. Maybe you meant --recursive?"
-        exec "#{$0} --help"
       else
         puts "Read: #{@read}\nUpdated: #{@updated}\nFailed: #{@failed}"
       end
@@ -71,7 +70,7 @@ class Sweeper
   def recurse(dir)
     # Hackishly avoid problems with metacharacters in the Dir[] string.
     dir = dir.gsub(/[^\s\w\.\/\\\-]/, '?')
-    # p dir if ENV['DEBUG']
+     p dir if ENV['DEBUG']
     Dir["#{dir}/*"].each do |filename|
       if File.directory? filename and options['recursive']
         recurse(filename)

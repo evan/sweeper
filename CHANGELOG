@@ -1,4 +1,6 @@
 
+v0.3.1. Fix some annoying Windows bugs.
+
 v0.3. Pure Ruby Levenshtein algorithm, for Windows support.
 
 v0.2.4. More robust XSD error handling.

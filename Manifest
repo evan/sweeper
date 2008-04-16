@@ -2,6 +2,7 @@ bin/sweeper
 CHANGELOG
 ext/extconf.rb
 ext/Makefile
+ext/nmake.bat
 lib/sweeper.rb
 LICENSE
 Manifest
