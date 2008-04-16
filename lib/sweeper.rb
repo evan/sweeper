@@ -7,7 +7,7 @@ require 'open-uri'
 require 'uri'
 require 'Text'
 
-require 'ruby-debug' if ENV['DEBUG']
+#require 'ruby-debug' if ENV['DEBUG']
 
 class ID3Lib::Tag
   def url
@@ -36,7 +36,15 @@ class Sweeper
 
   # Instantiate a new Sweeper. See <tt>bin/sweeper</tt> for <tt>options</tt> details.
   def initialize(options = {})
-    @dir = File.expand_path(options['dir'] || Dir.pwd)
+    @dir = File.expand_path(options['dir'] || Dir.pwd)    
+
+    if RUBY_PLATFORM =~ /win32/
+      @dir = @dir[2..-1] # Strip drive letter
+      @null = "nul"
+    else
+      @null = "/dev/null"
+    end
+          
     @options = options
     @errf = Tempfile.new("stderr")
     @match_cache = {}    
@@ -70,7 +78,8 @@ class Sweeper
   def recurse(dir)
     # Hackishly avoid problems with metacharacters in the Dir[] string.
     dir = dir.gsub(/[^\s\w\.\/\\\-]/, '?')
-     p dir if ENV['DEBUG']
+    p dir if ENV['DEBUG']
+    
     Dir["#{dir}/*"].each do |filename|
       if File.directory? filename and options['recursive']
         recurse(filename)
@@ -152,7 +161,7 @@ class Sweeper
   # Lookup the basic metadata for an mp3 file. Accepts a pathname. Returns a tag hash.
   def lookup_basic(filename)
     Dir.chdir File.dirname(binary) do
-      response = `./#{File.basename(binary)} #{filename.inspect} 2> #{@errf.path}`
+      response = `./#{File.basename(binary)} #{filename.inspect} 2> #{@null}`
       object = begin
         XSD::Mapping.xml2obj(response)
       rescue Object => e
