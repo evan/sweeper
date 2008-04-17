@@ -247,14 +247,15 @@ class Sweeper
   
   # Returns the path to the fingerprinter binary for this platform.
   def binary
-    @binary ||= "#{File.expand_path(File.dirname(__FILE__))}/../vendor/" + 
-      case RUBY_PLATFORM
+    here = "#{File.expand_path(File.dirname(__FILE__))}/../vendor"
+    @binary ||= case RUBY_PLATFORM
         when /win32/
-          "lastfm.fpclient.beta2.win32/lastfmfpclient.exe"
+          (defined? RUBYSCRIPT2EXE ? RUBYSCRIPT2EXE.exedir : here) + 
+          "/lastfm.fpclient.beta2.win32/lastfmfpclient.exe"
         when /darwin/
-          "lastfm.fpclient.beta2.OSX-intel/lastfmfpclient"
+          "#{here}/lastfm.fpclient.beta2.OSX-intel/lastfmfpclient"
         else 
-          "lastfm.fpclient.beta2.linux-32/lastfmfpclient"
+          "#{here}/lastfm.fpclient.beta2.linux-32/lastfmfpclient"
         end
   end
   

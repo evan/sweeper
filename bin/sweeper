@@ -2,7 +2,7 @@
 
 require 'rubygems'
 require 'choice'
-require "#{File.dirname(__FILE__)}/../lib/sweeper"
+require "#{File.dirname(__FILE__)}/../lib/sweeper" unless defined? Sweeper
 
 PROGRAM_VERSION = 0.1
 

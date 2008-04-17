@@ -3,6 +3,7 @@ CHANGELOG
 ext/extconf.rb
 ext/Makefile
 ext/nmake.bat
+init.rb
 lib/sweeper.rb
 LICENSE
 Manifest
