@@ -10,6 +10,7 @@ Echoe.new("sweeper") do |p|
   p.clean_pattern = ['doc', 'pkg', 'test/integration/songs']
   p.rdoc_pattern = ['README', 'LICENSE', 'CHANGELOG', 'TODO', 'lib/*']
   p.need_zip = true
+  p.need_tar_gz = false
 end
 
 task :binary do
