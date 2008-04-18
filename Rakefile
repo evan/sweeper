@@ -9,4 +9,13 @@ Echoe.new("sweeper") do |p|
   p.dependencies = ['id3lib-ruby', 'choice', 'Text', 'activesupport']
   p.clean_pattern = ['doc', 'pkg', 'test/integration/songs']
   p.rdoc_pattern = ['README', 'LICENSE', 'CHANGELOG', 'TODO', 'lib/*']
+  p.need_zip = true
 end
+
+task :binary do
+  Dir.chdir(File.dirname(__FILE__)) do
+    system("ruby c:/ruby/bin/rubyscript2exe init.rb")
+    File.rename("init.exe", "sweeper.exe")
+  end
+end
+  

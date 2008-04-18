@@ -26,13 +26,23 @@ If you use this software, please {make a donation}[http://blog.evanweaver.com/do
 * id3lib (Linux and OS X only)
 * some mp3 files
 
-== Usage
+== Installation
 
-First, install the gem:
+<b>Linux/OS X:</b>
+
+First, install id3lib, Ruby, and Rubygems through your package manager. Then start a terminal and run:
   sudo gem install sweeper
 
-Now, change to the directory of mp3s you want to tag and run:
-  sweeper --genre --recursive
+<b>Windows:</b>
+
+If you have Ruby set up via the {One-Click Installer}[http://rubyforge.org/projects/rubyinstaller/], you install via gems as above.
+
+Otherwise, download a zipfile from the Sweeper section of the {Rubyforge page}[http://rubyforge.org/frs/?group_id=2835]. Unzip it and copy <tt>sweeper.exe</tt> into the <tt>C:\Windows</tt> folder.
+
+== Usage
+
+Now, start a terminal. Change to the directory of mp3s you want to tag and run:
+  sweeper --genre --recursive  
 
 Your mp3s will be updated with missing artist, genre, and trackname information, and a list of all tagged genres will be added to the <tt>comment</tt> field, for use in smart playlists.
 

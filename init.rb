@@ -3,10 +3,8 @@
 require 'rubygems'
 require 'rubyscript2exe'
 
-files = (Dir["vendor/lastfm.fpclient.beta2.win32/*"] + Dir["*"]).reject do |s| 
-  File.directory? s
-end
-RUBYSCRIPT2EXE.bin = files
+RUBYSCRIPT2EXE.bin = Dir["vendor/lastfm.fpclient.beta2.win32/*"]
 
+require 'net/http'
 require 'lib/sweeper'
 load 'bin/sweeper'

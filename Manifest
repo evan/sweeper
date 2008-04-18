@@ -8,6 +8,7 @@ lib/sweeper.rb
 LICENSE
 Manifest
 README
+sweeper.exe
 test/integration/sweeper_test.rb
 TODO
 vendor/lastfm.fpclient.beta2.linux-32/lastfmfpclient

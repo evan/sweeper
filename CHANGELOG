@@ -1,4 +1,6 @@
 
+v0.3.2. Bundle working sweeper.exe.
+
 v0.3.1. Fix some annoying Windows bugs.
 
 v0.3. Pure Ruby Levenshtein algorithm, for Windows support.

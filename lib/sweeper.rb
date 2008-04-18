@@ -250,8 +250,13 @@ class Sweeper
     here = "#{File.expand_path(File.dirname(__FILE__))}/../vendor"
     @binary ||= case RUBY_PLATFORM
         when /win32/
-          (defined?(RUBYSCRIPT2EXE) ? RUBYSCRIPT2EXE.exedir : here) + 
-          "/lastfm.fpclient.beta2.win32/lastfmfpclient.exe"
+          if defined?(RUBYSCRIPT2EXE)
+            e = RUBYSCRIPT2EXE            
+            p [e.tempdir, e.userdir, e.exedir, e.appdir] if ENV['DEBUG']
+            "#{e.appdir}/../bin/lastfmfpclient.exe"
+          else
+            "#{here}/lastfm.fpclient.beta2.win32/lastfmfpclient.exe"
+          end
         when /darwin/
           "#{here}/lastfm.fpclient.beta2.OSX-intel/lastfmfpclient"
         else 
