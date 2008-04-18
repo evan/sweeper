@@ -37,7 +37,7 @@ Install id3lib, Ruby, and Rubygems through your package manager. Then start a te
 
 If you have Ruby set up via the {One-Click Installer}[http://rubyforge.org/projects/rubyinstaller/], you can install via Rubygems as above.
 
-Otherwise, download a zipfile from the Sweeper section of the {Rubyforge page}[http://rubyforge.org/frs/?group_id=2835]. Unzip it and copy <tt>sweeper.exe</tt> into the <tt>C:\Windows</tt> folder.
+Otherwise, download a zipfile from the appropriate section of the {Rubyforge page}[http://rubyforge.org/frs/?group_id=2835]. Unzip it and copy <tt>sweeper.exe</tt> into the <tt>C:\Windows</tt> folder.
 
 == Usage
 
