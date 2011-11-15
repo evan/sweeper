@@ -3,13 +3,15 @@ Sweeper
 
 Automatically tag your music collection with metadata from Last.fm.
 
+== DEPRECATED
+
+No replacement.
+
 == License
 
 Copyright 2008 Cloudburst, LLC. Licensed under the AFL 3. See the included LICENSE file. Unlinked portions copyright 2008 Last.fm Ltd., used by permission, and licensed under the GPL 2.
 
-The public certificate for the gem is here[http://rubyforge.org/frs/download.php/25331/evan_weaver-original-public_cert.pem]. 
-
-If you use this software, please {make a donation}[http://blog.evanweaver.com/donate/], or {recommend Evan}[http://www.workingwithrails.com/person/7739-evan-weaver] at Working with Rails.
+The public certificate for the gem is here[http://rubyforge.org/frs/download.php/25331/evan_weaver-original-public_cert.pem].
 
 == Features
 
@@ -42,7 +44,7 @@ Otherwise, download a zipfile from the appropriate section of the {Rubyforge pag
 == Usage
 
 Now, start a terminal. Change to the directory of mp3s you want to tag and run:
-  sweeper --genre --recursive  
+  sweeper --genre --recursive
 
 Your mp3s will be updated with missing artist, genre, and trackname information, and a list of all tagged genres will be added to the <tt>comment</tt> field, for use in smart playlists.
 
@@ -52,16 +54,16 @@ You do not need a Last.fm account to use Sweeper.
 
 Unknown song:
 
-  $ id3info 1_001.mp3 
+  $ id3info 1_001.mp3
   *** Tag information for 1_001.mp3
   *** mp3 info
   MPEG1/layer III
   Bitrate: 128KBps
   Frequency: 44KHz
- 
+
 Same song after running <tt>sweeper ----genre</tt>:
 
-  $ id3info 1_001.mp3   
+  $ id3info 1_001.mp3
   *** Tag information for 1_001.mp3
   === TPE1 (Lead performer(s)/Soloist(s)): Photon Band
   === TIT2 (Title/songname/content description): To Sing For You
@@ -74,15 +76,15 @@ Same song after running <tt>sweeper ----genre</tt>:
   Bitrate: 128KBps
   Frequency: 44KHz
 
-== Options  
+== Options
 
 Sweeper takes a few command line options:
-  
+
     -d, --dir            Directory to search (defaults to current).
     -r, --recursive      Recurse directories.
         --dry-run        Do a dry run (no files will be changed).
     -f, --force          Overwrite all existing tags.
-    -g, --genre=[force]  Add genre tag and genre comments, optionally overwriting 
+    -g, --genre=[force]  Add genre tag and genre comments, optionally overwriting
                          existing ones.
 
 == Notes
