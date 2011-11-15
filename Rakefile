@@ -6,7 +6,7 @@ Echoe.new("sweeper") do |p|
   p.summary = "Automatically tag your music collection with metadata from Last.fm."
   p.url = "http://blog.evanweaver.com/files/doc/fauna/sweeper/"
   p.docs_host = "blog.evanweaver.com:~/www/bax/public/files/doc/"
-  p.dependencies = ['id3lib-ruby', 'choice', 'Text', 'activesupport']
+  p.dependencies = ['id3lib-ruby', 'choice', 'Text', 'activesupport =2.1.0', 'soap4r', 'test-unit']
   p.clean_pattern = ['doc', 'pkg', 'test/integration/songs']
   p.rdoc_pattern = ['README', 'LICENSE', 'CHANGELOG', 'TODO', 'lib/*']
   p.need_zip = true
@@ -19,4 +19,4 @@ task :binary do
     File.rename("init.exe", "sweeper.exe")
   end
 end
-  
+
